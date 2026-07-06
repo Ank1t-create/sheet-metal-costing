@@ -68,13 +68,70 @@ button:hover{
 <form method="POST">
 
 <label>Thickness (mm)</label>
-<input type="number" step="0.01" name="thickness" required>
+<input
+    type="number"
+    step="0.01"
+    name="thickness"
+    value="{{ thickness }}"
+    required>
 
 <label>Length (mm)</label>
-<input type="number" step="0.01" name="length" required>
+<input
+    type="number"
+    step="0.01"
+    name="length"
+    value="{{ length }}"
+    required>
 
 <label>Width (mm)</label>
-<input type="number" step="0.01" name="width" required>
+<input
+    type="number"
+    step="0.01"
+    name="width"
+    value="{{ width }}"
+    required>
+<label>Blanks per Sheet</label>
+<input
+    type="number"
+    name="blanks_per_sheet"
+    value="{{ blanks_per_sheet }}"
+    required>
+
+<label>Part Weight (kg)</label>
+<input
+    type="number"
+    step="0.00001"
+    min="0.00001"
+    max="10"
+    name="part_weight"
+    value="{{ part_weight }}"
+    required>
+<label>RM Rate (₹/kg)</label>
+<input
+    type="number"
+    step="0.01"
+    name="rm_rate"
+    value="{{ rm_rate }}"
+    required>
+
+<label>Scrap Rate (₹/kg)</label>
+<input
+    type="number"
+    step="0.01"
+    name="scrap_rate"
+    value="{{ scrap_rate }}"
+    required>
+<p><b>Sheet Weight:</b> {{ weight }} kg</p>
+
+<p><b>Input Weight:</b> {{ input_weight }} kg</p>
+
+<p><b>Scrap Weight:</b> {{ scrap_weight }} kg</p>
+
+<p><b>RM Cost:</b> ₹ {{ rm_cost }}</p>
+
+<p><b>Scrap Cost:</b> ₹ {{ scrap_cost }}</p>
+
+<p><b>Final RMC:</b> ₹ {{ rmc }}</p>
 
 <button type="submit">
 Calculate
@@ -88,7 +145,9 @@ Calculate
 
 <h2>Result</h2>
 
-<p><b>Sheet Weight:</b> {{weight}} kg</p>
+<p><b>Sheet Weight:</b> {{ weight }} kg</p>
+
+<p><b>Raw Material Cost:</b> ₹ {{ rmc or 0 }}</p>
 
 </div>
 
