@@ -2,89 +2,23 @@
 <html>
 
 <head>
-
 <title>Sheet Metal Part Cost</title>
 
 <style>
-
-body{
-    font-family:Arial, sans-serif;
-    background:#f4f4f4;
-}
-
-.container{
-    width:600px;
-    margin:40px auto;
-    background:white;
-    padding:30px;
-    border-radius:12px;
-    box-shadow:0 0 15px rgba(0,0,0,0.2);
-}
-
-h1{
-    text-align:center;
-    color:#0056b3;
-}
-
-.subtitle{
-    text-align:center;
-    color:gray;
-    margin-bottom:25px;
-}
-
-h2{
-    color:#0056b3;
-    border-bottom:2px solid #0056b3;
-    padding-bottom:6px;
-    margin-top:30px;
-}
-
-label{
-    font-weight:bold;
-    display:block;
-    margin-top:15px;
-}
-
-input, select{
-    width:100%;
-    padding:10px;
-    margin-top:8px;
-    border:1px solid #ccc;
-    border-radius:6px;
-    font-size:16px;
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-    margin-top:30px;
-    padding:14px;
-    background:#0056b3;
-    color:white;
-    border:none;
-    border-radius:8px;
-    font-size:18px;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#003d80;
-}
-
-.result{
-    margin-top:35px;
-    background:#d4edda;
-    border-radius:10px;
-    padding:20px;
-}
-
-.result p{
-    font-size:17px;
-    margin:8px 0;
-}
-
+body{ font-family:Arial, sans-serif; background:#f4f4f4; }
+.container{ width:600px; margin:40px auto; background:white; padding:30px; border-radius:12px; box-shadow:0 0 15px rgba(0,0,0,0.2); }
+h1{ text-align:center; color:#0056b3; }
+.subtitle{ text-align:center; color:gray; margin-bottom:25px; }
+h2{ color:#0056b3; border-bottom:2px solid #0056b3; padding-bottom:6px; margin-top:30px; }
+label{ font-weight:bold; display:block; margin-top:15px; }
+input, select{ width:100%; padding:10px; margin-top:8px; border:1px solid #ccc; border-radius:6px; font-size:16px; box-sizing:border-box; }
+button{ width:100%; margin-top:30px; padding:14px; background:#0056b3; color:white; border:none; border-radius:8px; font-size:18px; cursor:pointer; }
+button:hover{ background:#003d80; }
+.result{ margin-top:35px; background:#d4edda; border-radius:10px; padding:20px; }
+.result p{ font-size:17px; margin:8px 0; }
+.error{ margin-top:20px; background:#f8d7da; color:#721c24; border-radius:10px; padding:15px; text-align:center; font-weight:bold; }
+.hidden{ display:none; }
 </style>
-
 </head>
 
 <body>
@@ -92,149 +26,111 @@ button:hover{
 <div class="container">
 
 <h1>Sheet Metal Part Cost</h1>
+<p class="subtitle">Automotive Cost Estimation Tool</p>
 
-<p class="subtitle">
-Automotive Cost Estimation Tool
-</p>
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
 
 <form method="POST">
 
 <h2>Sheet Weight</h2>
 
 <label>Material Type</label>
-
 <select name="material" required>
-
 <option value="">Select Material</option>
-
 <option value="CR" {% if material=="CR" %}selected{% endif %}>CR Sheet</option>
-
 <option value="HR" {% if material=="HR" %}selected{% endif %}>HR Sheet</option>
-
 <option value="AL" {% if material=="AL" %}selected{% endif %}>Aluminium Sheet</option>
-
 </select>
 
 <h2>Dimensions of Sheet</h2>
 
 <label>Thickness (mm)</label>
-
-<input
-type="number"
-step="0.01"
-min="0.10"
-max="100"
-name="thickness"
-value="{{ thickness }}"
-placeholder="Enter thickness (0.10 - 100 mm)"
-required>
+<input type="number" step="0.01" min="0.10" max="100" name="thickness"
+value="{{ thickness }}" placeholder="Enter thickness (0.10 - 100 mm)" required>
 
 <label>Standard Sheet Size</label>
-
 <select name="sheet_size" required>
-
 <option value="">Select Standard Size</option>
-
-<option value="2500x1250" {% if sheet_size=="2500x1250" %}selected{% endif %}>
-2500 × 1250 mm
-</option>
-
-<option value="2440x1220" {% if sheet_size=="2440x1220" %}selected{% endif %}>
-2440 × 1220 mm
-</option>
-
-<option value="3000x1500" {% if sheet_size=="3000x1500" %}selected{% endif %}>
-3000 × 1500 mm
-</option>
-
-<option value="2000x1000" {% if sheet_size=="2000x1000" %}selected{% endif %}>
-2000 × 1000 mm
-</option>
-
-<option value="1500x1250" {% if sheet_size=="1500x1250" %}selected{% endif %}>
-1500 × 1250 mm
-</option>
-
+<option value="2500x1250" {% if sheet_size=="2500x1250" %}selected{% endif %}>2500 × 1250 mm</option>
+<option value="2440x1220" {% if sheet_size=="2440x1220" %}selected{% endif %}>2440 × 1220 mm</option>
+<option value="3000x1500" {% if sheet_size=="3000x1500" %}selected{% endif %}>3000 × 1500 mm</option>
+<option value="2000x1000" {% if sheet_size=="2000x1000" %}selected{% endif %}>2000 × 1000 mm</option>
+<option value="1500x1250" {% if sheet_size=="1500x1250" %}selected{% endif %}>1500 × 1250 mm</option>
 </select>
 
 <h2>Blank Details</h2>
 
-<label>Blanks per Sheet</label>
+<label>Blank Shape</label>
+<select name="blank_shape" id="blank_shape" onchange="toggleShape()" required>
+<option value="rect" {% if blank_shape=="rect" %}selected{% endif %}>Rectangular</option>
+<option value="circle" {% if blank_shape=="circle" %}selected{% endif %}>Circular</option>
+</select>
 
-<input
-type="number"
-min="1"
-name="blanks_per_sheet"
-value="{{ blanks_per_sheet }}"
-placeholder="Enter blanks per sheet"
-required>
+<div id="rect_fields">
+<label>Part Length (mm)</label>
+<input type="number" step="0.01" min="0.1" name="part_length" value="{{ part_length }}" placeholder="Enter part length">
 
-<label>Part Weight (kg)</label>
+<label>Part Width (mm)</label>
+<input type="number" step="0.01" min="0.1" name="part_width" value="{{ part_width }}" placeholder="Enter part width">
+</div>
 
-<input
-type="number"
-step="0.00001"
-min="0.00001"
-max="10"
-name="part_weight"
-value="{{ part_weight }}"
-placeholder="0.00001 - 10 kg"
-required>
+<div id="circle_fields" class="hidden">
+<label>Part Radius (mm)</label>
+<input type="number" step="0.01" min="0.1" name="part_radius" value="{{ part_radius }}" placeholder="Enter part radius">
+</div>
 
 <h2>Material Cost</h2>
 
 <label>Raw Material Rate (₹/kg)</label>
-
-<input
-type="number"
-step="0.01"
-min="0"
-name="rm_rate"
-value="{{ rm_rate }}"
-placeholder="Enter RM Rate"
-required>
+<input type="number" step="0.01" min="0" name="rm_rate" value="{{ rm_rate }}" placeholder="Enter RM Rate" required>
 
 <label>Scrap Rate (₹/kg)</label>
+<input type="number" step="0.01" min="0" name="scrap_rate" value="{{ scrap_rate }}" placeholder="Enter Scrap Rate" required>
 
-<input
-type="number"
-step="0.01"
-min="0"
-name="scrap_rate"
-value="{{ scrap_rate }}"
-placeholder="Enter Scrap Rate"
-required>
-
-<button type="submit">
-Calculate Cost
-</button>
+<button type="submit">Calculate Cost</button>
 
 </form>
 
 {% if weight %}
-
 <div class="result">
-
 <h2>Calculation Results</h2>
-
 <p><b>Sheet Weight :</b> {{ weight }} kg</p>
-
+<p><b>Blank Shape :</b> {{ "Rectangular" if blank_shape == "rect" else "Circular" }}</p>
+<p><b>Blank Weight (auto-calculated) :</b> {{ blank_weight }} kg</p>
+<p><b>Best Orientation :</b> {{ orientation }}</p>
+<p><b>Blanks per Sheet (auto-calculated) :</b> {{ blanks_per_sheet }}</p>
+<p><b>Nesting Efficiency :</b> {{ nesting_eff }} %</p>
 <p><b>Input Weight / Blank :</b> {{ input_weight }} kg</p>
-
 <p><b>Scrap Weight :</b> {{ scrap_weight }} kg</p>
-
 <p><b>Raw Material Cost :</b> ₹ {{ rm_cost }}</p>
-
 <p><b>Scrap Recovery :</b> ₹ {{ scrap_cost }}</p>
-
 <p><b>Final Raw Material Cost :</b> ₹ {{ rmc }}</p>
-
 </div>
-
 {% endif %}
 
 </div>
 
-</body>
+<script>
+function toggleShape(){
+    var shape = document.getElementById("blank_shape").value;
+    var rect = document.getElementById("rect_fields");
+    var circle = document.getElementById("circle_fields");
+    if(shape === "circle"){
+        rect.classList.add("hidden");
+        circle.classList.remove("hidden");
+        rect.querySelectorAll("input").forEach(i => i.required = false);
+        circle.querySelectorAll("input").forEach(i => i.required = true);
+    } else {
+        circle.classList.add("hidden");
+        rect.classList.remove("hidden");
+        circle.querySelectorAll("input").forEach(i => i.required = false);
+        rect.querySelectorAll("input").forEach(i => i.required = true);
+    }
+}
+window.onload = toggleShape;
+</script>
 
+</body>
 </html>
