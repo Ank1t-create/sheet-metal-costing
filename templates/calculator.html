@@ -3,22 +3,22 @@
 
 <head>
 
-<title>Sheet Weight Calculator</title>
+<title>Sheet Metal Part Cost</title>
 
 <style>
 
 body{
-    font-family:Arial;
+    font-family:Arial, sans-serif;
     background:#f4f4f4;
 }
 
 .container{
-    width:500px;
+    width:600px;
     margin:40px auto;
     background:white;
     padding:30px;
-    border-radius:10px;
-    box-shadow:0px 0px 15px gray;
+    border-radius:12px;
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
 }
 
 h1{
@@ -26,21 +26,44 @@ h1{
     color:#0056b3;
 }
 
-input{
+.subtitle{
+    text-align:center;
+    color:gray;
+    margin-bottom:25px;
+}
+
+h2{
+    color:#0056b3;
+    border-bottom:2px solid #0056b3;
+    padding-bottom:6px;
+    margin-top:30px;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:15px;
+}
+
+input, select{
     width:100%;
     padding:10px;
-    margin-top:10px;
-    margin-bottom:20px;
+    margin-top:8px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:16px;
+    box-sizing:border-box;
 }
 
 button{
     width:100%;
-    padding:12px;
+    margin-top:30px;
+    padding:14px;
     background:#0056b3;
     color:white;
-    font-size:18px;
     border:none;
     border-radius:8px;
+    font-size:18px;
     cursor:pointer;
 }
 
@@ -49,10 +72,15 @@ button:hover{
 }
 
 .result{
-    margin-top:30px;
+    margin-top:35px;
     background:#d4edda;
-    padding:15px;
     border-radius:10px;
+    padding:20px;
+}
+
+.result p{
+    font-size:17px;
+    margin:8px 0;
 }
 
 </style>
@@ -63,90 +91,122 @@ button:hover{
 
 <div class="container">
 
-<h1>Sheet Weight</h1>
-<p style="text-align:center; color:gray;">
+<h1>Sheet Metal Part Cost</h1>
+
+<p class="subtitle">
 Automotive Cost Estimation Tool
 </p>
 
 <form method="POST">
-    <label>Material</label>
+
+<h2>Sheet Weight</h2>
+
+<label>Material Type</label>
 
 <select name="material" required>
 
-    <option value="">Select Material</option>
+<option value="">Select Material</option>
 
-    <option value="CR" {% if material=="CR" %}selected{% endif %}>
-        CR Sheet
-    </option>
+<option value="CR" {% if material=="CR" %}selected{% endif %}>CR Sheet</option>
 
-    <option value="HR" {% if material=="HR" %}selected{% endif %}>
-        HR Sheet
-    </option>
+<option value="HR" {% if material=="HR" %}selected{% endif %}>HR Sheet</option>
 
-    <option value="AL" {% if material=="AL" %}selected{% endif %}>
-        Aluminium Sheet
-    </option>
+<option value="AL" {% if material=="AL" %}selected{% endif %}>Aluminium Sheet</option>
 
 </select>
 
+<h2>Dimensions of Sheet</h2>
+
 <label>Thickness (mm)</label>
-<input
-    type="number"
-    step="0.01"
-    name="thickness"
-    value="{{ thickness }}"
-    required>
 
-<label>Length (mm)</label>
 <input
-    type="number"
-    step="0.01"
-    name="length"
-    value="{{ length }}"
-    required>
+type="number"
+step="0.01"
+min="0.10"
+max="100"
+name="thickness"
+value="{{ thickness }}"
+placeholder="Enter thickness (0.10 - 100 mm)"
+required>
 
-<label>Width (mm)</label>
-<input
-    type="number"
-    step="0.01"
-    name="width"
-    value="{{ width }}"
-    required>
+<label>Standard Sheet Size</label>
+
+<select name="sheet_size" required>
+
+<option value="">Select Standard Size</option>
+
+<option value="2500x1250" {% if sheet_size=="2500x1250" %}selected{% endif %}>
+2500 × 1250 mm
+</option>
+
+<option value="2440x1220" {% if sheet_size=="2440x1220" %}selected{% endif %}>
+2440 × 1220 mm
+</option>
+
+<option value="3000x1500" {% if sheet_size=="3000x1500" %}selected{% endif %}>
+3000 × 1500 mm
+</option>
+
+<option value="2000x1000" {% if sheet_size=="2000x1000" %}selected{% endif %}>
+2000 × 1000 mm
+</option>
+
+<option value="1500x1250" {% if sheet_size=="1500x1250" %}selected{% endif %}>
+1500 × 1250 mm
+</option>
+
+</select>
+
+<h2>Blank Details</h2>
+
 <label>Blanks per Sheet</label>
+
 <input
-    type="number"
-    name="blanks_per_sheet"
-    value="{{ blanks_per_sheet }}"
-    required>
+type="number"
+min="1"
+name="blanks_per_sheet"
+value="{{ blanks_per_sheet }}"
+placeholder="Enter blanks per sheet"
+required>
 
 <label>Part Weight (kg)</label>
+
 <input
-    type="number"
-    step="0.00001"
-    min="0.00001"
-    max="10"
-    name="part_weight"
-    value="{{ part_weight }}"
-    required>
-<label>RM Rate (₹/kg)</label>
+type="number"
+step="0.00001"
+min="0.00001"
+max="10"
+name="part_weight"
+value="{{ part_weight }}"
+placeholder="0.00001 - 10 kg"
+required>
+
+<h2>Material Cost</h2>
+
+<label>Raw Material Rate (₹/kg)</label>
+
 <input
-    type="number"
-    step="0.01"
-    name="rm_rate"
-    value="{{ rm_rate }}"
-    required>
+type="number"
+step="0.01"
+min="0"
+name="rm_rate"
+value="{{ rm_rate }}"
+placeholder="Enter RM Rate"
+required>
 
 <label>Scrap Rate (₹/kg)</label>
-<input
-    type="number"
-    step="0.01"
-    name="scrap_rate"
-    value="{{ scrap_rate }}"
-    required>
 
+<input
+type="number"
+step="0.01"
+min="0"
+name="scrap_rate"
+value="{{ scrap_rate }}"
+placeholder="Enter Scrap Rate"
+required>
 
 <button type="submit">
-Calculate
+Calculate Cost
 </button>
 
 </form>
@@ -155,19 +215,19 @@ Calculate
 
 <div class="result">
 
-<h2>Result</h2>
+<h2>Calculation Results</h2>
 
-<p><b>Sheet Weight:</b> {{ weight }} kg</p>
+<p><b>Sheet Weight :</b> {{ weight }} kg</p>
 
-<p><b>Input Weight:</b> {{ input_weight }} kg</p>
+<p><b>Input Weight / Blank :</b> {{ input_weight }} kg</p>
 
-<p><b>Scrap Weight:</b> {{ scrap_weight }} kg</p>
+<p><b>Scrap Weight :</b> {{ scrap_weight }} kg</p>
 
-<p><b>RM Cost:</b> ₹ {{ rm_cost }}</p>
+<p><b>Raw Material Cost :</b> ₹ {{ rm_cost }}</p>
 
-<p><b>Scrap Cost:</b> ₹ {{ scrap_cost }}</p>
+<p><b>Scrap Recovery :</b> ₹ {{ scrap_cost }}</p>
 
-<p><b>Final RMC:</b> ₹ {{ rmc }}</p>
+<p><b>Final Raw Material Cost :</b> ₹ {{ rmc }}</p>
 
 </div>
 
