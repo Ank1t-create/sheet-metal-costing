@@ -18,6 +18,8 @@ def calculator():
     scrap_cost = 0
     rmc = 0
 
+    material = ""
+
     thickness = ""
     length = ""
     width = ""
@@ -28,35 +30,49 @@ def calculator():
 
     if request.method == "POST":
 
-        # Inputs
-        thickness = float(request.form["thickness"])
-        length = float(request.form["length"])
-        width = float(request.form["width"])
+     material = request.form["material"]
 
-        blanks_per_sheet = float(request.form["blanks_per_sheet"])
-        part_weight = float(request.form["part_weight"])
+    thickness = float(request.form["thickness"])
+    length = float(request.form["length"])
+    width = float(request.form["width"])
 
-        rm_rate = float(request.form["rm_rate"])
-        scrap_rate = float(request.form["scrap_rate"])
+    blanks_per_sheet = float(request.form["blanks_per_sheet"])
+    part_weight = float(request.form["part_weight"])
 
-        # Sheet weight
-        weight = round(sheet_weight(thickness, length, width), 3)
+    rm_rate = float(request.form["rm_rate"])
+    scrap_rate = float(request.form["scrap_rate"])
 
-        # Input weight per part
-        input_weight = round(weight / blanks_per_sheet, 3)
+    # Select density
+    if material == "CR":
+        density = 7.85
+    elif material == "HR":
+        density = 7.85
+    elif material == "AL":
+        density = 2.70
+    else:
+        density = 7.85
 
-        # Scrap weight
-        scrap_weight = round(input_weight - part_weight, 3)
+    # Sheet weight
+    weight = round(sheet_weight(thickness, length, width, density), 3)
 
-        # Cost calculations
-        rm_cost = input_weight * rm_rate
-        scrap_cost = scrap_weight * scrap_rate
+    # Input weight per part
+    input_weight = round(weight / blanks_per_sheet, 3)
 
-        # Final RMC
-        rmc = round(rm_cost - scrap_cost, 2)
+    # Scrap weight
+    scrap_weight = round(input_weight - part_weight, 3)
+
+    # Cost calculations
+    rm_cost = input_weight * rm_rate
+    scrap_cost = scrap_weight * scrap_rate
+
+    # Final RMC
+    rmc = round(rm_cost - scrap_cost, 2)
 
     return render_template(
     "calculator.html",
+
+    material=material,
+
     weight=weight,
     input_weight=input_weight,
     scrap_weight=scrap_weight,

@@ -63,12 +63,31 @@ button:hover{
 
 <div class="container">
 
-<h1>Sheet Metal Part Cost</h1>
+<h1>Sheet Weight</h1>
 <p style="text-align:center; color:gray;">
 Automotive Cost Estimation Tool
 </p>
 
 <form method="POST">
+    <label>Material</label>
+
+<select name="material" required>
+
+    <option value="">Select Material</option>
+
+    <option value="CR" {% if material=="CR" %}selected{% endif %}>
+        CR Sheet
+    </option>
+
+    <option value="HR" {% if material=="HR" %}selected{% endif %}>
+        HR Sheet
+    </option>
+
+    <option value="AL" {% if material=="AL" %}selected{% endif %}>
+        Aluminium Sheet
+    </option>
+
+</select>
 
 <label>Thickness (mm)</label>
 <input
@@ -124,17 +143,7 @@ Automotive Cost Estimation Tool
     name="scrap_rate"
     value="{{ scrap_rate }}"
     required>
-<p><b>Sheet Weight:</b> {{ weight }} kg</p>
 
-<p><b>Input Weight:</b> {{ input_weight }} kg</p>
-
-<p><b>Scrap Weight:</b> {{ scrap_weight }} kg</p>
-
-<p><b>RM Cost:</b> ₹ {{ rm_cost }}</p>
-
-<p><b>Scrap Cost:</b> ₹ {{ scrap_cost }}</p>
-
-<p><b>Final RMC:</b> ₹ {{ rmc }}</p>
 
 <button type="submit">
 Calculate
@@ -150,7 +159,15 @@ Calculate
 
 <p><b>Sheet Weight:</b> {{ weight }} kg</p>
 
-<p><b>Raw Material Cost:</b> ₹ {{ rmc or 0 }}</p>
+<p><b>Input Weight:</b> {{ input_weight }} kg</p>
+
+<p><b>Scrap Weight:</b> {{ scrap_weight }} kg</p>
+
+<p><b>RM Cost:</b> ₹ {{ rm_cost }}</p>
+
+<p><b>Scrap Cost:</b> ₹ {{ scrap_cost }}</p>
+
+<p><b>Final RMC:</b> ₹ {{ rmc }}</p>
 
 </div>
 
