@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Sheet Metal Costing Software</title>
+<title>Sheet Metal Part Cost</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
@@ -10,10 +10,15 @@
   :root{
     --steel-dark:#12181f;
     --steel-panel:#1a232d;
+    --steel-field:#212c38;
     --grid-line:rgba(143,163,184,0.08);
     --accent:#ff6b35;
     --text-main:#eef2f5;
     --text-mute:#8fa3b8;
+    --ok-bg:#16261f;
+    --ok-border:#2c8a5e;
+    --err-bg:#2a1a1a;
+    --err-border:#c0392b;
   }
 
   *{ box-sizing:border-box; }
@@ -29,21 +34,19 @@
     font-family:'IBM Plex Sans', sans-serif;
     color:var(--text-main);
     display:flex;
-    align-items:center;
     justify-content:center;
-    padding:30px;
+    padding:50px 20px;
   }
 
   .sheet{
     position:relative;
     width:100%;
-    max-width:620px;
+    max-width:640px;
     background:var(--steel-panel);
     border:1px solid rgba(143,163,184,0.25);
-    padding:60px 50px 0;
+    padding:50px 45px 0;
   }
 
-  /* CAD-style corner registration marks */
   .sheet::before, .sheet::after,
   .corner-tl, .corner-br{
     content:"";
@@ -69,26 +72,69 @@
   h1{
     font-family:'Oswald', sans-serif;
     font-weight:700;
-    font-size:42px;
-    letter-spacing:1px;
+    font-size:34px;
+    letter-spacing:0.5px;
     text-transform:uppercase;
     text-align:center;
-    margin:14px 0 6px;
-    line-height:1.15;
+    margin:10px 0 40px;
   }
 
-  .subtitle{
-    text-align:center;
+  /* Section callout headers */
+  .section-tag{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:38px;
+    margin-bottom:18px;
+  }
+  .section-tag span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--accent);
+    white-space:nowrap;
+  }
+  .section-tag::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:rgba(143,163,184,0.25);
+  }
+
+  label{
+    display:block;
+    font-size:13px;
     color:var(--text-mute);
-    font-size:15px;
-    margin-bottom:36px;
+    margin-top:16px;
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
   }
 
-  /* Laser-cut styled CTA */
-  form{ display:flex; justify-content:center; margin-bottom:50px; }
+  input, select{
+    width:100%;
+    background:var(--steel-field);
+    border:1px solid rgba(143,163,184,0.3);
+    color:var(--text-main);
+    padding:12px 14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:15px;
+    border-radius:2px;
+  }
+
+  input:focus, select:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+
+  input::placeholder{ color:#5c6b7a; }
+
+  .hidden{ display:none; }
 
   button{
     position:relative;
+    width:100%;
     background:var(--accent);
     color:#12181f;
     border:none;
@@ -97,19 +143,65 @@
     font-size:15px;
     letter-spacing:1.5px;
     text-transform:uppercase;
-    padding:16px 44px;
+    padding:16px;
+    margin:36px 0 45px;
     cursor:pointer;
-    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+    clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
     transition: transform 0.15s ease, box-shadow 0.2s ease;
   }
-
   button:hover{
     transform:translateY(-2px);
     box-shadow:0 6px 18px rgba(255,107,53,0.35);
   }
 
-  /* Technical drawing title block */
+  .error{
+    margin-top:20px;
+    background:var(--err-bg);
+    border:1px solid var(--err-border);
+    color:#ff9a8b;
+    padding:14px 16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+  }
+
+  .result{
+    margin:0 -45px 0;
+    padding:30px 45px 6px;
+    background:var(--ok-bg);
+    border-top:1px solid var(--ok-border);
+  }
+
+  .result .section-tag span{ color:#4fd18f; }
+
+  .result-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:9px 0;
+    border-bottom:1px dashed rgba(143,163,184,0.15);
+    font-size:14px;
+  }
+  .result-row:last-child{ border-bottom:none; }
+
+  .result-row .label{
+    color:var(--text-mute);
+    text-transform:uppercase;
+    font-size:12px;
+    letter-spacing:0.5px;
+  }
+  .result-row .value{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:15px;
+    color:var(--text-main);
+  }
+  .result-row.highlight .value{
+    color:var(--accent);
+    font-weight:500;
+    font-size:17px;
+  }
+
   .title-block{
+    margin:40px -45px 0;
     border-top:1px solid rgba(143,163,184,0.25);
     display:grid;
     grid-template-columns:1fr 1fr 1fr;
@@ -119,43 +211,129 @@
     text-transform:uppercase;
     letter-spacing:0.5px;
   }
-
-  .title-block div{
-    padding:14px 16px;
-    border-right:1px solid rgba(143,163,184,0.25);
-  }
+  .title-block div{ padding:14px 20px; border-right:1px solid rgba(143,163,184,0.25); }
   .title-block div:last-child{ border-right:none; }
-
-  .title-block b{
-    display:block;
-    color:var(--text-main);
-    font-size:12px;
-    margin-top:4px;
-    letter-spacing:0.3px;
-  }
+  .title-block b{ display:block; color:var(--text-main); font-size:12px; margin-top:4px; }
 </style>
 </head>
 
 <body>
 
 <div class="sheet">
-  <div class="corner-tl"></div>
-  <div class="corner-br"></div>
+<div class="corner-tl"></div>
+<div class="corner-br"></div>
 
-  <p class="eyebrow">Automotive &middot; Precision Costing</p>
-  <h1>Sheet Metal<br>Costing Engine</h1>
-  <p class="subtitle">Nesting-aware material &amp; scrap cost estimation</p>
+<p class="eyebrow">Automotive &middot; Precision Costing</p>
+<h1>Part Cost Sheet</h1>
 
-  <form action="/calculator">
-    <button type="submit">Start Calculator →</button>
-  </form>
+{% if error %}
+<div class="error">⚠ {{ error }}</div>
+{% endif %}
 
-  <div class="title-block">
-    <div>Drawn By<b>Ankit Kumar Mishra</b></div>
-    <div>Material<b>CR / HR / AL</b></div>
-    <div>Rev<b>1.1</b></div>
-  </div>
+<form method="POST">
+
+<div class="section-tag"><span>01 — Sheet</span></div>
+
+<label>Material Type</label>
+<select name="material" required>
+<option value="">Select Material</option>
+<option value="CR" {% if material=="CR" %}selected{% endif %}>CR Sheet</option>
+<option value="HR" {% if material=="HR" %}selected{% endif %}>HR Sheet</option>
+<option value="AL" {% if material=="AL" %}selected{% endif %}>Aluminium Sheet</option>
+</select>
+
+<label>Thickness (mm)</label>
+<input type="number" step="0.01" min="0.10" max="100" name="thickness"
+value="{{ thickness }}" placeholder="0.10 – 100 mm" required>
+
+<label>Standard Sheet Size</label>
+<select name="sheet_size" required>
+<option value="">Select Standard Size</option>
+<option value="2500x1250" {% if sheet_size=="2500x1250" %}selected{% endif %}>2500 × 1250 mm</option>
+<option value="2440x1220" {% if sheet_size=="2440x1220" %}selected{% endif %}>2440 × 1220 mm</option>
+<option value="3000x1500" {% if sheet_size=="3000x1500" %}selected{% endif %}>3000 × 1500 mm</option>
+<option value="2000x1000" {% if sheet_size=="2000x1000" %}selected{% endif %}>2000 × 1000 mm</option>
+<option value="1500x1250" {% if sheet_size=="1500x1250" %}selected{% endif %}>1500 × 1250 mm</option>
+</select>
+
+<div class="section-tag"><span>02 — Blank</span></div>
+
+<label>Blank Shape</label>
+<select name="blank_shape" id="blank_shape" onchange="toggleShape()" required>
+<option value="rect" {% if blank_shape=="rect" %}selected{% endif %}>Rectangular</option>
+<option value="circle" {% if blank_shape=="circle" %}selected{% endif %}>Circular</option>
+</select>
+
+<div id="rect_fields">
+<label>Part Length (mm)</label>
+<input type="number" step="0.01" min="0.1" name="part_length" value="{{ part_length }}" placeholder="Enter part length">
+
+<label>Part Width (mm)</label>
+<input type="number" step="0.01" min="0.1" name="part_width" value="{{ part_width }}" placeholder="Enter part width">
 </div>
+
+<div id="circle_fields" class="hidden">
+<label>Part Radius (mm)</label>
+<input type="number" step="0.01" min="0.1" name="part_radius" value="{{ part_radius }}" placeholder="Enter part radius">
+</div>
+
+<div class="section-tag"><span>03 — Rates</span></div>
+
+<label>Raw Material Rate (₹/kg)</label>
+<input type="number" step="0.01" min="0" name="rm_rate" value="{{ rm_rate }}" placeholder="Enter RM Rate" required>
+
+<label>Scrap Rate (₹/kg)</label>
+<input type="number" step="0.01" min="0" name="scrap_rate" value="{{ scrap_rate }}" placeholder="Enter Scrap Rate" required>
+
+<button type="submit">Calculate Cost →</button>
+
+</form>
+
+{% if weight %}
+<div class="result">
+<div class="section-tag"><span>Result</span></div>
+
+<div class="result-row"><span class="label">Sheet Weight</span><span class="value">{{ weight }} kg</span></div>
+<div class="result-row"><span class="label">Blank Shape</span><span class="value">{{ "Rectangular" if blank_shape == "rect" else "Circular" }}</span></div>
+<div class="result-row"><span class="label">Blank Weight</span><span class="value">{{ blank_weight }} kg</span></div>
+<div class="result-row"><span class="label">Best Orientation</span><span class="value">{{ orientation }}</span></div>
+<div class="result-row"><span class="label">Blanks / Sheet</span><span class="value">{{ blanks_per_sheet }}</span></div>
+<div class="result-row"><span class="label">Nesting Efficiency</span><span class="value">{{ nesting_eff }} %</span></div>
+<div class="result-row"><span class="label">Input Weight / Blank</span><span class="value">{{ input_weight }} kg</span></div>
+<div class="result-row"><span class="label">Scrap Weight</span><span class="value">{{ scrap_weight }} kg</span></div>
+<div class="result-row"><span class="label">Raw Material Cost</span><span class="value">₹ {{ rm_cost }}</span></div>
+<div class="result-row"><span class="label">Scrap Recovery</span><span class="value">₹ {{ scrap_cost }}</span></div>
+<div class="result-row highlight"><span class="label">Final RM Cost</span><span class="value">₹ {{ rmc }}</span></div>
+</div>
+{% endif %}
+
+<div class="title-block">
+<div>Sheet No.<b>001</b></div>
+<div>Scale<b>Auto-Nest</b></div>
+<div>Rev<b>1.1</b></div>
+</div>
+
+</div>
+
+<script>
+function toggleShape(){
+    var shape = document.getElementById("blank_shape").value;
+    var rect = document.getElementById("rect_fields");
+    var circle = document.getElementById("circle_fields");
+    if(shape === "circle"){
+        rect.classList.add("hidden");
+        circle.classList.remove("hidden");
+        rect.querySelectorAll("input").forEach(i => i.required = false);
+        circle.querySelectorAll("input").forEach(i => i.required = true);
+    } else {
+        circle.classList.add("hidden");
+        rect.classList.remove("hidden");
+        circle.querySelectorAll("input").forEach(i => i.required = false);
+        rect.querySelectorAll("input").forEach(i => i.required = true);
+    }
+}
+window.onload = toggleShape;
+</script>
 
 </body>
 </html>
