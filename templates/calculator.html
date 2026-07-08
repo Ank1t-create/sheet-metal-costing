@@ -129,7 +129,16 @@ function toggleShape(){
         rect.querySelectorAll("input").forEach(i => i.required = true);
     }
 }
-window.onload = toggleShape;
+window.onload = function () {
+    toggleShape();
+
+    // Prevent mouse wheel from changing number inputs
+    document.querySelectorAll('input[type="number"]').forEach(function(input) {
+        input.addEventListener('wheel', function() {
+            this.blur();
+        });
+    });
+};
 </script>
 
 </body>
